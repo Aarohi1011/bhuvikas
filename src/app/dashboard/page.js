@@ -50,13 +50,13 @@ export default function DashboardPage() {
   const [instantLoading, setInstantLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
 
-  // Sample prompt queries for quick testing
+  // Sample prompt queries showcasing English, Hindi, and Hinglish
   const samplePrompts = [
     "Can I open a commercial shop in the basement?",
-    "What are the conditions for instant deemed approval for plots up to 186 sqm?",
+    "क्या 186 वर्गमीटर तक के प्लॉट पर तुरंत स्वीकृति मिलती है?",
+    "Indore me 24m road par G+4 residential building ka setback aur FAR kitna hoga?",
     "Is basement parking counted in FAR or excluded?",
-    "What is the minimum road width and open space for high rise buildings?",
-    "Can the municipal corporation demolish illegal construction without notice?",
+    "क्या नगर निगम बिना नोटिस दिए अवैध निर्माण तोड़ सकता है?",
   ];
 
   // --- Execute Claude AI Search ---
@@ -258,9 +258,28 @@ export default function DashboardPage() {
                 boxShadow: "0 4px 20px -4px rgba(11, 31, 42, 0.03)",
               }}
             >
-              <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, color: "var(--ink-navy)", marginBottom: "0.75rem" }}>
-                Ask Any Complex MP Real Estate, Town Planning, or Bye-Law Query:
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", flexWrap: "wrap", gap: "0.5rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--ink-navy)" }}>
+                  Ask Any Complex MP Real Estate, Town Planning, or Bye-Law Query:
+                </label>
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.4rem",
+                    background: "rgba(200, 161, 90, 0.12)",
+                    padding: "0.22rem 0.65rem",
+                    borderRadius: "9999px",
+                    border: "1px solid rgba(200, 161, 90, 0.35)",
+                  }}
+                  title="Supports full Hindi, English, and Hinglish queries automatically"
+                >
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--warm-gold)" }} />
+                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--warm-gold)" }}>
+                    ✨ Auto-Detects Hindi • English • Hinglish
+                  </span>
+                </div>
+              </div>
 
               <div style={{ display: "flex", gap: "0.75rem" }}>
                 <textarea
@@ -272,7 +291,7 @@ export default function DashboardPage() {
                       handleAskClaude();
                     }
                   }}
-                  placeholder="e.g. Can I construct a basement on a plot of 240 sqm? What are the setbacks and parking rules?"
+                  placeholder="Type in English, हिन्दी, or Hinglish (e.g. 'Can I construct a basement?' or 'Indore me setback rule kya hai?')"
                   rows={3}
                   style={{
                     flex: 1,

@@ -23,7 +23,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, isAuthenticated, logout, demoAccounts, switchDemoAccount } = useAuth();
-  const { activeLanguage, setActiveLanguage } = useChat();
   const [profileOpen, setProfileOpen] = useState(false);
 
   // Hide Navbar completely on landing page ("/"), auth page ("/auth"), or if user is not logged in
@@ -56,34 +55,23 @@ export default function Navbar() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            {/* Multilingual Selector */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", background: "#162E3D", padding: "0.15rem 0.35rem", borderRadius: "0.5rem", border: "1px solid #213C4D" }}>
-              <button
-                onClick={() => setActiveLanguage("en")}
-                style={{
-                  padding: "0.15rem 0.5rem",
-                  borderRadius: "0.35rem",
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  backgroundColor: activeLanguage === "en" ? "var(--teal-primary)" : "transparent",
-                  color: "#FFFFFF",
-                }}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setActiveLanguage("hi")}
-                style={{
-                  padding: "0.15rem 0.5rem",
-                  borderRadius: "0.35rem",
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  backgroundColor: activeLanguage === "hi" ? "var(--teal-primary)" : "transparent",
-                  color: "#FFFFFF",
-                }}
-              >
-                हिन्दी
-              </button>
+            {/* Autonomous Trilingual Intelligence Highlight */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.45rem",
+                background: "rgba(200, 161, 90, 0.12)",
+                padding: "0.22rem 0.75rem",
+                borderRadius: "9999px",
+                border: "1px solid rgba(200, 161, 90, 0.35)",
+              }}
+              title="BhuVikas AI automatically detects and responds in Hindi, English, and Hinglish."
+            >
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--warm-gold)" }} />
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--warm-gold)", letterSpacing: "0.02em" }}>
+                Auto-Detects: Hindi • English • Hinglish
+              </span>
             </div>
 
             <Link href="/settings" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", color: "#94A3B8", fontSize: "0.72rem" }}>

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useChat } from "@/context/ChatContext";
 import {
   Settings,
   User,
@@ -21,7 +20,6 @@ import {
 
 export default function SettingsPage() {
   const { currentUser, isAuthenticated } = useAuth();
-  const { activeLanguage, setActiveLanguage } = useChat();
 
   const [theme, setTheme] = useState("sand");
   const [name, setName] = useState(currentUser?.name || "Aarohi Saxena");
@@ -137,7 +135,7 @@ export default function SettingsPage() {
         </div>
 
         <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          {/* Card 1: Multilingual Consultation Mode */}
+          {/* Card 1: Autonomous Trilingual Intelligence Highlight */}
           <div
             style={{
               backgroundColor: "var(--card-white)",
@@ -147,55 +145,84 @@ export default function SettingsPage() {
             }}
           >
             <div style={{ marginBottom: "1.25rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--ink-navy)" }}>
-                  Consultation Language & Output Mode
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--ink-navy)" }}>
+                    Autonomous Multilingual Intelligence
+                  </span>
+                  <span className="bv-badge-gold">Auto-Detect Active</span>
+                </div>
+                <span
+                  style={{
+                    fontSize: "0.72rem",
+                    fontWeight: 700,
+                    padding: "0.2rem 0.65rem",
+                    borderRadius: "9999px",
+                    backgroundColor: "rgba(15, 118, 110, 0.08)",
+                    color: "var(--teal-primary)",
+                    border: "1px solid rgba(15, 118, 110, 0.2)",
+                  }}
+                >
+                  Zero Setup Required
                 </span>
-                <span className="bv-badge-gold">Bilingual</span>
               </div>
-              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
-                Select how BhuVikas AI renders legal rules, setbacks, and FAR calculation answers.
+              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.35rem", lineHeight: 1.5 }}>
+                BhuVikas AI automatically senses your query language and crafts the reply in that exact tongue with statutory MP Bhumi Vikas Niyam, 2012 accuracy. You do not need to select or toggle languages manually.
               </p>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
+              {/* English Capability */}
               <div
-                onClick={() => setActiveLanguage("en")}
                 style={{
                   padding: "1rem",
                   borderRadius: "0.85rem",
-                  border: activeLanguage === "en" ? "2px solid var(--teal-primary)" : "1px solid var(--border-sand)",
-                  backgroundColor: activeLanguage === "en" ? "rgba(15, 118, 110, 0.04)" : "var(--sand-white)",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
+                  border: "1px solid var(--border-sand)",
+                  backgroundColor: "var(--sand-white)",
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                  <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--ink-navy)" }}>English (Official)</span>
-                  {activeLanguage === "en" && <Check width={18} height={18} style={{ color: "var(--teal-primary)" }} />}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.4rem" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--teal-primary)" }} />
+                  <span style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--ink-navy)" }}>English (Official)</span>
                 </div>
-                <p style={{ fontSize: "0.74rem", color: "var(--text-muted)", lineHeight: 1.4 }}>
-                  Standard municipal English with verbatim gazette clauses and structured metric tables.
+                <p style={{ fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.45 }}>
+                  Verbatim MP Gazette rule numbers, Table 4 setback calculations, and formal municipal architect notes.
                 </p>
               </div>
 
+              {/* Hindi Capability */}
               <div
-                onClick={() => setActiveLanguage("hi")}
                 style={{
                   padding: "1rem",
                   borderRadius: "0.85rem",
-                  border: activeLanguage === "hi" ? "2px solid var(--teal-primary)" : "1px solid var(--border-sand)",
-                  backgroundColor: activeLanguage === "hi" ? "rgba(15, 118, 110, 0.04)" : "var(--sand-white)",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
+                  border: "1px solid var(--border-sand)",
+                  backgroundColor: "var(--sand-white)",
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                  <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--ink-navy)" }}>हिन्दी (मध्य प्रदेश राजपत्र)</span>
-                  {activeLanguage === "hi" && <Check width={18} height={18} style={{ color: "var(--teal-primary)" }} />}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.4rem" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--warm-gold)" }} />
+                  <span style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--ink-navy)" }}>हिन्दी (मध्य प्रदेश राजपत्र)</span>
                 </div>
-                <p style={{ fontSize: "0.74rem", color: "var(--text-muted)", lineHeight: 1.4 }}>
-                  शुद्ध और स्पष्ट हिन्दी व्याख्या — भूमि विकास नियम 2012 के अनुसार सभी नियमों का विवरण।
+                <p style={{ fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.45 }}>
+                  मध्य प्रदेश भूमि विकास नियम, 2012 के सभी प्रावधानों की प्रामाणिक, सरल और स्पष्ट हिन्दी व्याख्या।
+                </p>
+              </div>
+
+              {/* Hinglish Capability */}
+              <div
+                style={{
+                  padding: "1rem",
+                  borderRadius: "0.85rem",
+                  border: "1px solid var(--border-sand)",
+                  backgroundColor: "var(--sand-white)",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.4rem" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#3B82F6)" }} />
+                  <span style={{ fontSize: "0.84rem", fontWeight: 700, color: "var(--ink-navy)" }}>Hinglish (Colloquial)</span>
+                </div>
+                <p style={{ fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.45 }}>
+                  Real estate broker & client queries like <em>&ldquo;12m road par FAR aur parking rule kya hai?&rdquo;</em> directly answered.
                 </p>
               </div>
             </div>

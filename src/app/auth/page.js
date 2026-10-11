@@ -299,44 +299,23 @@ function AuthForm() {
               ← Back to Portal Home
             </Link>
 
-            {/* Language Switcher Pill */}
+            {/* Autonomous Language Support Badge */}
             <div
               style={{
                 display: "inline-flex",
-                background: "#FFFFFF",
-                padding: "0.2rem",
-                borderRadius: "0.6rem",
-                border: "1px solid var(--border-sand)",
+                alignItems: "center",
+                gap: "0.4rem",
+                background: "rgba(200, 161, 90, 0.12)",
+                padding: "0.25rem 0.75rem",
+                borderRadius: "9999px",
+                border: "1px solid rgba(200, 161, 90, 0.3)",
               }}
+              title="BhuVikas AI natively understands and answers in Hindi, English, and Hinglish."
             >
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                style={{
-                  padding: "0.2rem 0.65rem",
-                  borderRadius: "0.45rem",
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  backgroundColor: language === "en" ? "var(--teal-primary)" : "transparent",
-                  color: language === "en" ? "#FFFFFF" : "var(--ink-navy)",
-                }}
-              >
-                English
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("hi")}
-                style={{
-                  padding: "0.2rem 0.65rem",
-                  borderRadius: "0.45rem",
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  backgroundColor: language === "hi" ? "var(--teal-primary)" : "transparent",
-                  color: language === "hi" ? "#FFFFFF" : "var(--ink-navy)",
-                }}
-              >
-                हिन्दी
-              </button>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--warm-gold)" }} />
+              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--warm-gold)" }}>
+                Hindi • English • Hinglish
+              </span>
             </div>
           </div>
 

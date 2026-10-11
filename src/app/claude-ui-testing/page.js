@@ -37,13 +37,13 @@ export default function ClaudeUiTestingPage() {
   const [instantLoading, setInstantLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
 
-  // Sample prompt queries for quick testing
+  // Sample prompt queries showcasing English, Hindi, and Hinglish
   const samplePrompts = [
     "Can I open a commercial shop in the basement?",
-    "What are the conditions for instant deemed approval for plots up to 186 sqm?",
+    "क्या 186 वर्गमीटर तक के प्लॉट पर तुरंत स्वीकृति मिलती है?",
+    "Indore me 24m road par G+4 residential building ka setback aur FAR kitna hoga?",
     "Is basement parking counted in FAR or excluded?",
-    "What is the minimum road width and open space for high rise buildings?",
-    "Can the municipal corporation demolish illegal construction without notice?",
+    "क्या नगर निगम बिना नोटिस दिए अवैध निर्माण तोड़ सकता है?",
   ];
 
   // --- Execute Claude AI Search ---
@@ -228,18 +228,33 @@ export default function ClaudeUiTestingPage() {
             
             {/* Input Card */}
             <div className="bv-card" style={{ padding: "1.75rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
                 <label className="bv-label" style={{ marginBottom: 0 }}>
                   Enter Any Unformatted / Real-World Question
                 </label>
-                <span className="bv-badge-gold">Claude 3.5 Sonnet + Grounded Rules</span>
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                    background: "rgba(200, 161, 90, 0.12)",
+                    padding: "0.2rem 0.6rem",
+                    borderRadius: "9999px",
+                    border: "1px solid rgba(200, 161, 90, 0.35)",
+                  }}
+                >
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--warm-gold)" }} />
+                  <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--warm-gold)" }}>
+                    ✨ Auto-Detects Hindi • English • Hinglish
+                  </span>
+                </div>
               </div>
 
               <div>
                 <textarea
                   value={aiQuery}
                   onChange={(e) => setAiQuery(e.target.value)}
-                  placeholder="Ask in plain English or Hindi (e.g. Can I open a commercial shop in the basement? What are the conditions for deemed approval for plots up to 186 sqm?)..."
+                  placeholder="Ask in plain English, हिन्दी, or Hinglish (e.g. Can I open a commercial shop in basement? / Indore me setback kya hai?)..."
                   rows={3}
                   className="bv-input"
                   style={{ fontSize: "0.88rem", resize: "vertical" }}
