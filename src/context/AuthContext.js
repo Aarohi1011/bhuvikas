@@ -4,30 +4,30 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 const DEMO_ACCOUNTS = [
   {
-    id: "user-1",
-    name: "Aarohi Sharma",
-    email: "aarohi.sharma@bhopalmunicipal.gov.in",
-    role: "Town Planning Officer",
-    organization: "Bhopal Municipal Corporation (BMC)",
-    badge: "Official Municipal Clerk",
+    id: "user-aarohi-1011",
+    name: "Aarohi Saxena",
+    email: "aarohisaxena1011@gmail.com",
+    role: "Town Planning Officer & Architect",
+    organization: "Directorate of Town & Country Planning (T&CP)",
+    badge: "Licensed Professional",
     avatar: "AS",
   },
   {
     id: "user-2",
-    name: "Er. Rajesh Saxena",
-    email: "rajesh@saxena-architects.in",
-    role: "Registered Architect / Structural Engineer",
-    organization: "Council of Architecture (CA/2014/58291)",
-    badge: "Licensed Architect",
-    avatar: "RS",
+    name: "Bhopal Civic Desk",
+    email: "officer@bhopalmunicipal.gov.in",
+    role: "Town Planning Officer",
+    organization: "Bhopal Municipal Corporation (BMC)",
+    badge: "Official Municipal Clerk",
+    avatar: "BC",
   },
   {
     id: "user-3",
     name: "Devendra Patel",
     email: "devendra.patel@gmail.com",
-    role: "Property Owner / Developer",
-    organization: "Indore Urban Development Zone",
-    badge: "Citizen / Applicant",
+    role: "Real Estate Broker / Channel Partner",
+    organization: "Madhya Pradesh Property Advisory",
+    badge: "RERA Registered Broker",
     avatar: "DP",
   },
 ];
@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
       if (stored) {
         setCurrentUser(JSON.parse(stored));
       } else {
-        // Users start unauthenticated until they log in or choose a demo account
+        // Users start unauthenticated until they log in
         setCurrentUser(null);
       }
     } catch {
@@ -54,36 +54,52 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = (email, password, role = "Town Planning Officer") => {
-    const existing = DEMO_ACCOUNTS.find((u) => u.email.toLowerCase() === (email || "").toLowerCase());
-    const userToSet = existing || {
-      id: "user-" + Date.now(),
-      name: email.split("@")[0].replace(".", " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "Officer User",
-      email: email,
-      role: role,
-      organization: "Directorate of Town & Country Planning (T&CP)",
-      badge: role.includes("Officer") ? "Official Municipal Clerk" : "Authorized Professional",
-      avatar: (email[0] || "U").toUpperCase(),
-    };
-
-    setCurrentUser(userToSet);
-    localStorage.setItem("bhuvikas_user", JSON.stringify(userToSet));
-    return { success: true, user: userToSet };
+  const login = async (email, password, role = "Town Planning Officer") => {
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "login", email, password }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setCurrentUser(data.user);
+        localStorage.setItem("bhuvikas_user", JSON.stringify(data.user));
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, error: data.error || "Login failed." };
+      }
+    } catch (err) {
+      // Local fallback in case offline
+      const normalized = (email || "").toLowerCase();
+      if (normalized === "aarohisaxena1011@gmail.com" && (password === "demo" || !password)) {
+        const user = DEMO_ACCOUNTS[0];
+        setCurrentUser(user);
+        localStorage.setItem("bhuvikas_user", JSON.stringify(user));
+        return { success: true, user };
+      }
+      return { success: false, error: err.message || "Network error." };
+    }
   };
 
-  const signup = ({ name, email, password, role, organization }) => {
-    const newUser = {
-      id: "user-" + Date.now(),
-      name: name || "Verified User",
-      email: email,
-      role: role || "Town Planning Assistant",
-      organization: organization || "Urban Local Body (MP)",
-      badge: "Verified Account",
-      avatar: (name ? name[0] : email[0]).toUpperCase(),
-    };
-    setCurrentUser(newUser);
-    localStorage.setItem("bhuvikas_user", JSON.stringify(newUser));
-    return { success: true, user: newUser };
+  const signup = async ({ name, email, password, role, organization }) => {
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "signup", name, email, password, role, organization }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setCurrentUser(data.user);
+        localStorage.setItem("bhuvikas_user", JSON.stringify(data.user));
+        return { success: true, user: data.user };
+      } else {
+        return { success: false, error: data.error || "Signup failed." };
+      }
+    } catch (err) {
+      return { success: false, error: err.message || "Network error." };
+    }
   };
 
   const logout = () => {

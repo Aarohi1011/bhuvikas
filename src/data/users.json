@@ -1,0 +1,35 @@
+[
+  {
+    "id": "user-aarohi-1011",
+    "name": "Aarohi Saxena",
+    "email": "aarohisaxena1011@gmail.com",
+    "password": "demo",
+    "role": "Town Planning Officer & Architect",
+    "organization": "Directorate of Town & Country Planning (T&CP)",
+    "badge": "Licensed Professional",
+    "avatar": "AS",
+    "createdAt": "2026-10-11T12:00:00.000Z"
+  },
+  {
+    "id": "user-bmc-officer",
+    "name": "Bhopal Civic Desk",
+    "email": "officer@bhopalmunicipal.gov.in",
+    "password": "demo",
+    "role": "Town Planning Officer",
+    "organization": "Bhopal Municipal Corporation (BMC)",
+    "badge": "Official Municipal Clerk",
+    "avatar": "BC",
+    "createdAt": "2026-10-11T12:00:00.000Z"
+  },
+  {
+    "id": "user-broker-demo",
+    "name": "Devendra Patel",
+    "email": "devendra.patel@gmail.com",
+    "password": "demo",
+    "role": "Real Estate Broker / Channel Partner",
+    "organization": "Madhya Pradesh Property Advisory",
+    "badge": "RERA Registered Broker",
+    "avatar": "DP",
+    "createdAt": "2026-10-11T12:00:00.000Z"
+  }
+]

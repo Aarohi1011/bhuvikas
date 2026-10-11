@@ -32,37 +32,73 @@ function AuthForm() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState("Real Estate Broker / Channel Partner");
-  const [organization, setOrganization] = useState("Madhya Pradesh Property Advisory");
+  const [role, setRole] = useState("Town Planning Officer & Architect");
+  const [organization, setOrganization] = useState("Directorate of Town & Country Planning (T&CP)");
   const [language, setLanguage] = useState("en");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const fillDemoCredentials = () => {
+    setAuthMethod("email");
+    setEmail("aarohisaxena1011@gmail.com");
+    setPassword("demo");
+    setError("");
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     const identifier = authMethod === "phone" ? phone : email;
     if (!identifier || !password) {
-      setError(`Please enter your ${authMethod === "phone" ? "mobile phone number" : "email address"} and password/OTP.`);
+      setError(`Please enter your ${authMethod === "phone" ? "mobile phone number" : "email address"} and password.`);
       return;
     }
 
-    if (mode === "login") {
-      login(identifier, password, role);
-      router.push("/dashboard");
-    } else {
-      if (!name) {
-        setError("Please enter your full name.");
-        return;
+    setSubmitting(true);
+    try {
+      if (mode === "login") {
+        const res = await login(identifier, password, role);
+        if (res.success) {
+          router.push("/dashboard");
+        } else {
+          setError(res.error || "Invalid email or password. Please check your credentials.");
+        }
+      } else {
+        if (!name) {
+          setError("Please enter your full name.");
+          setSubmitting(false);
+          return;
+        }
+        const res = await signup({ name, email: identifier, password, role, organization });
+        if (res.success) {
+          router.push("/dashboard");
+        } else {
+          setError(res.error || "Failed to create account.");
+        }
       }
-      signup({ name, email: identifier, password, role, organization });
-      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred during authentication.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleDemoSelect = (index) => {
-    switchDemoAccount(index);
-    router.push("/dashboard");
+  const handleDemoSelect = async (account) => {
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await login(account.email, "demo", account.role);
+      if (res.success) {
+        router.push("/dashboard");
+      } else {
+        setError(res.error || "Could not log in as demo account.");
+      }
+    } catch (err) {
+      setError(err.message || "Authentication failed.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -419,6 +455,50 @@ function AuthForm() {
               </button>
             </div>
 
+            {/* Aarohi Saxena Demo Credential Quick-Fill Card */}
+            {mode === "login" && (
+              <div
+                style={{
+                  backgroundColor: "rgba(15, 118, 110, 0.05)",
+                  border: "1px dashed var(--teal-primary)",
+                  borderRadius: "0.75rem",
+                  padding: "0.85rem",
+                  marginBottom: "1.25rem",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "0.5rem" }}>
+                  <div>
+                    <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--teal-primary)" }}>
+                      DEMO ACCOUNT (users.json)
+                    </div>
+                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--ink-navy)", marginTop: "0.2rem" }}>
+                      aarohisaxena1011@gmail.com
+                    </div>
+                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                      Password: <code style={{ background: "#E2E8F0", padding: "0.1rem 0.35rem", borderRadius: "0.25rem" }}>demo</code>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={fillDemoCredentials}
+                    style={{
+                      padding: "0.4rem 0.65rem",
+                      borderRadius: "0.5rem",
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      backgroundColor: "var(--teal-primary)",
+                      color: "#FFFFFF",
+                      border: "none",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Auto-Fill
+                  </button>
+                </div>
+              </div>
+            )}
+
             {error && (
               <div
                 style={{
@@ -460,7 +540,7 @@ function AuthForm() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="broker@mp-realty.in"
+                    placeholder="aarohisaxena1011@gmail.com"
                     className="bv-input"
                   />
                 </div>
@@ -504,9 +584,10 @@ function AuthForm() {
                       onChange={(e) => setRole(e.target.value)}
                       className="bv-input"
                     >
-                      <option value="Real Estate Broker / Channel Partner">Real Estate Broker / Channel Partner</option>
+                      <option value="Town Planning Officer & Architect">Town Planning Officer & Architect</option>
                       <option value="Town Planning Officer / Municipal Clerk">Town Planning Officer / Municipal Clerk</option>
                       <option value="Licensed Architect / Structural Engineer">Licensed Architect / Structural Engineer</option>
+                      <option value="Real Estate Broker / Channel Partner">Real Estate Broker / Channel Partner</option>
                       <option value="Property Developer / Investor">Property Developer / Investor</option>
                     </select>
                   </div>
@@ -517,7 +598,7 @@ function AuthForm() {
                       type="text"
                       value={organization}
                       onChange={(e) => setOrganization(e.target.value)}
-                      placeholder="Bhopal Realty Advisory"
+                      placeholder="Directorate of Town & Country Planning (T&CP)"
                       className="bv-input"
                     />
                   </div>
@@ -530,8 +611,11 @@ function AuthForm() {
                     {authMethod === "phone" ? "OTP or Security Code" : "Password"}
                   </label>
                   {mode === "login" && (
-                    <span style={{ fontSize: "0.7rem", color: "var(--teal-primary)", fontWeight: 600, cursor: "pointer" }}>
-                      Forgot?
+                    <span
+                      onClick={fillDemoCredentials}
+                      style={{ fontSize: "0.7rem", color: "var(--teal-primary)", fontWeight: 600, cursor: "pointer" }}
+                    >
+                      Use Demo password: demo
                     </span>
                   )}
                 </div>
@@ -540,17 +624,24 @@ function AuthForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="demo"
                   className="bv-input"
                 />
               </div>
 
               <button
                 type="submit"
+                disabled={submitting}
                 className="bv-btn-primary"
-                style={{ width: "100%", padding: "0.85rem", marginTop: "0.5rem" }}
+                style={{ width: "100%", padding: "0.85rem", marginTop: "0.5rem", opacity: submitting ? 0.7 : 1 }}
               >
-                <span>{mode === "login" ? "Enter BhuVikas Desk" : "Create My Account"}</span>
+                <span>
+                  {submitting
+                    ? "Authenticating..."
+                    : mode === "login"
+                    ? "Enter BhuVikas Desk"
+                    : "Create My Account"}
+                </span>
                 <ArrowRight width={16} height={16} />
               </button>
             </form>
@@ -566,17 +657,18 @@ function AuthForm() {
                 }}
               >
                 <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase" }}>
-                  One-Click Instant Demo Access
+                  Instant 1-Click Profile Sign-In
                 </span>
-                <span className="bv-badge-gold">No typing needed</span>
+                <span className="bv-badge-gold">users.json</span>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                {demoAccounts.map((demo, idx) => (
+                {demoAccounts.map((demo) => (
                   <button
                     key={demo.id}
                     type="button"
-                    onClick={() => handleDemoSelect(idx)}
+                    disabled={submitting}
+                    onClick={() => handleDemoSelect(demo)}
                     style={{
                       textAlign: "left",
                       padding: "0.65rem 0.85rem",
@@ -587,6 +679,8 @@ function AuthForm() {
                       alignItems: "center",
                       justifyContent: "space-between",
                       transition: "all 0.15s ease",
+                      cursor: "pointer",
+                      opacity: submitting ? 0.7 : 1,
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = "var(--teal-primary)";
@@ -600,10 +694,10 @@ function AuthForm() {
                     <div>
                       <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--ink-navy)" }}>{demo.name}</div>
                       <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                        {demo.role} • {demo.organization}
+                        {demo.email} • {demo.role}
                       </div>
                     </div>
-                    <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--teal-primary)" }}>Select →</span>
+                    <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--teal-primary)" }}>Sign In →</span>
                   </button>
                 ))}
               </div>
