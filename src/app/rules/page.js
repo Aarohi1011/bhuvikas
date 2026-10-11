@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
 import { evaluateMPBuildingRule, MP_BHUMI_VIKAS_RULES } from "@/lib/mpBhumiVikasData";
 import {
@@ -21,7 +22,14 @@ import {
 
 export default function RulesPage() {
   const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
   const { sendMessage, createNewSession, openClauseInspector } = useChat();
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.replace("/auth");
+    }
+  }, [isAuthenticated, loading, router]);
 
   // Form Parameters
   const [plotArea, setPlotArea] = useState(240);
@@ -49,8 +57,19 @@ export default function RulesPage() {
     const summaryPrompt = `I tested a proposed ${plotArea} m² ${buildingType} building on a ${roadWidth} m road with proposed Front Setback of ${proposedFront}m and Height ${proposedHeight}m. What rules are violated and what limits must I follow?`;
     createNewSession(`Check for ${plotArea}m² plot on ${roadWidth}m road`);
     sendMessage(summaryPrompt);
-    router.push("/chat");
+    router.push("/dashboard");
   };
+
+  if (loading || !isAuthenticated) {
+    return (
+      <div style={{ minHeight: "75vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div className="bv-spinner" style={{ margin: "0 auto 1rem" }} />
+          <p style={{ color: "var(--ink-navy)", fontWeight: 600, fontSize: "0.95rem" }}>Verifying portal access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: "var(--sand-white)", minHeight: "100vh", padding: "2.5rem 1.5rem" }}>

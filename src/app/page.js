@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
 import { evaluateMPBuildingRule, MP_BHUMI_VIKAS_RULES } from "@/lib/mpBhumiVikasData";
 import Logo from "@/components/Logo";
@@ -27,6 +28,7 @@ import {
 
 export default function HomePage() {
   const router = useRouter();
+  const { isAuthenticated, currentUser } = useAuth();
   const { sendMessage, createNewSession, openClauseInspector } = useChat();
 
   const [quickPlotArea, setQuickPlotArea] = useState("240");
@@ -78,6 +80,67 @@ export default function HomePage() {
 
   return (
     <div style={{ backgroundColor: "var(--sand-white)", minHeight: "100vh" }}>
+      {/* Editorial Landing Top Bar */}
+      <header
+        style={{
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          backgroundColor: "#0B1F2A",
+          padding: "1rem 1.5rem",
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1280px",
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <Logo size={28} />
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                <span style={{ fontSize: "1.1rem", fontWeight: 900, color: "#FFFFFF", letterSpacing: "-0.02em" }}>
+                  BhuVikas <span style={{ color: "var(--gold-accent)", fontSize: "0.95rem" }}>भू-विकास</span>
+                </span>
+                <span className="bv-badge-gold" style={{ fontSize: "0.62rem", padding: "0.1rem 0.4rem" }}>
+                  MP 2025
+                </span>
+              </div>
+              <div style={{ fontSize: "0.68rem", color: "#94A3B8" }}>
+                Madhya Pradesh Town Planning & Real Estate Compliance
+              </div>
+            </div>
+          </div>
+
+          <div>
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                className="bv-btn-primary"
+                style={{ padding: "0.55rem 1.25rem", fontSize: "0.82rem" }}
+              >
+                <span>Enter Dashboard</span>
+                <ArrowRight width={14} height={14} />
+              </Link>
+            ) : (
+              <Link
+                href="/auth"
+                className="bv-btn-gold"
+                style={{ padding: "0.55rem 1.35rem", fontSize: "0.82rem", fontWeight: 700 }}
+              >
+                <Lock width={14} height={14} />
+                <span>Log In & Sign Up</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
       {/* 1. HERO SECTION (Editorial Ink Navy) */}
       <section className="bv-hero-dark">
         <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative", zIndex: 10 }}>

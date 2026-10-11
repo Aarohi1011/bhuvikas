@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { evaluateMPBuildingRule } from "@/lib/mpBhumiVikasData";
 import {
   Palette,
@@ -20,6 +22,15 @@ import {
 } from "@/components/icons";
 
 export default function CreativePage() {
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.replace("/auth");
+    }
+  }, [isAuthenticated, loading, router]);
+
   const [assetType, setAssetType] = useState("listing"); // "listing", "whatsapp", "brochure"
   const [propertyTitle, setPropertyTitle] = useState("Prime 240 m² Freehold Residential Plot, Arera Colony");
   const [location, setLocation] = useState("Arera Colony (Zone-10), Bhopal, MP");
@@ -118,6 +129,17 @@ Generated via BhuVikas AI Intelligence Desk.`;
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (loading || !isAuthenticated) {
+    return (
+      <div style={{ minHeight: "75vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div className="bv-spinner" style={{ margin: "0 auto 1rem" }} />
+          <p style={{ color: "var(--ink-navy)", fontWeight: 600, fontSize: "0.95rem" }}>Verifying portal access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: "var(--sand-white)", minHeight: "100vh", padding: "2.5rem 1.5rem" }}>

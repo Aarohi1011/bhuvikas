@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
 import Logo from "@/components/Logo";
@@ -21,15 +21,27 @@ import {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { currentUser, isAuthenticated, logout, demoAccounts, switchDemoAccount } = useAuth();
   const { activeLanguage, setActiveLanguage } = useChat();
   const [profileOpen, setProfileOpen] = useState(false);
+
+  // Hide Navbar completely on landing page ("/"), auth page ("/auth"), or if user is not logged in
+  if (pathname === "/" || pathname === "/auth" || !isAuthenticated) {
+    return null;
+  }
 
   const navLinks = [
     { href: "/dashboard", label: "Dashboard", icon: MessageSquare, badge: "AI Chat" },
     { href: "/rules", label: "Rules", icon: Sliders },
     { href: "/creative", label: "Creative", icon: Palette },
   ];
+
+  const handleSignOut = () => {
+    logout();
+    setProfileOpen(false);
+    router.push("/");
+  };
 
   return (
     <header style={{ position: "sticky", top: 0, zIndex: 50, borderBottom: "1px solid var(--border-sand)", background: "rgba(255, 255, 255, 0.98)", backdropFilter: "blur(10px)" }}>
@@ -207,10 +219,7 @@ export default function Navbar() {
 
                   <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.35rem" }}>
                     <button
-                      onClick={() => {
-                        logout();
-                        setProfileOpen(false);
-                      }}
+                      onClick={handleSignOut}
                       style={{
                         width: "100%",
                         textAlign: "left",

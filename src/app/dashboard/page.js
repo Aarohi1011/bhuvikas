@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import Logo from "@/components/Logo";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import {
@@ -22,6 +24,15 @@ import {
 } from "@/components/icons";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.replace("/auth");
+    }
+  }, [isAuthenticated, loading, router]);
+
   const [activeTab, setActiveTab] = useState("ai"); // "ai" | "instant" | "api"
 
   // --- Claude AI State ---
@@ -108,6 +119,17 @@ export default function DashboardPage() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
+
+  if (loading || !isAuthenticated) {
+    return (
+      <div style={{ minHeight: "75vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div className="bv-spinner" style={{ margin: "0 auto 1rem" }} />
+          <p style={{ color: "var(--ink-navy)", fontWeight: 600, fontSize: "0.95rem" }}>Verifying portal access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: "var(--sand-white)", minHeight: "100vh", padding: "2.5rem 1.5rem" }}>

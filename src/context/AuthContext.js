@@ -44,12 +44,11 @@ export function AuthProvider({ children }) {
       if (stored) {
         setCurrentUser(JSON.parse(stored));
       } else {
-        // Default initial session for ease of hackathon demo
-        setCurrentUser(DEMO_ACCOUNTS[0]);
-        localStorage.setItem("bhuvikas_user", JSON.stringify(DEMO_ACCOUNTS[0]));
+        // Users start unauthenticated until they log in or choose a demo account
+        setCurrentUser(null);
       }
     } catch {
-      setCurrentUser(DEMO_ACCOUNTS[0]);
+      setCurrentUser(null);
     } finally {
       setLoading(false);
     }
@@ -120,9 +119,9 @@ export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
     return {
-      currentUser: DEMO_ACCOUNTS[0],
+      currentUser: null,
       loading: false,
-      isAuthenticated: true,
+      isAuthenticated: false,
       demoAccounts: DEMO_ACCOUNTS,
       login: () => ({ success: true }),
       signup: () => ({ success: true }),
