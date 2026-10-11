@@ -31,5 +31,16 @@
     "badge": "RERA Registered Broker",
     "avatar": "DP",
     "createdAt": "2026-10-11T12:00:00.000Z"
+  },
+  {
+    "id": "user-1791719768850",
+    "name": "Deepansh Sharma",
+    "email": "deepanshsharma.dp1135@gmail.com",
+    "password": "123456789",
+    "role": "Property Developer / Investor",
+    "organization": "Directorate of Town & Country Planning (T&CP)",
+    "badge": "Verified Professional",
+    "avatar": "DS",
+    "createdAt": "2026-10-11T11:56:08.850Z"
   }
 ]
