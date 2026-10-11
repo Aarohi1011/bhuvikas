@@ -24,6 +24,7 @@ import {
   Palette,
   LifeBuoy,
   Lock,
+  User,
 } from "@/components/icons";
 
 export default function HomePage() {
