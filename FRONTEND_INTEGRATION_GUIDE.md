@@ -31,6 +31,39 @@ Because this is a Next.js project, you have **two ways** to query the search eng
 
 All endpoints run on `http://localhost:3000` (or your deployed origin).
 
+### 3.0. Claude AI Natural Language / Raw Search
+`POST /api/ai-search`
+
+Takes raw, unformatted questions (e.g. *"Can I open a commercial shop in the basement?"*) in English or Hindi, retrieves the relevant Bhumi Vikas rules, and uses Claude AI to generate a grounded legal answer with exact Rule numbers and Gazette page citations.
+
+#### Request Body:
+```json
+{
+  "query": "Can I open a commercial shop in the basement?"
+}
+```
+
+#### Example Response:
+```json
+{
+  "success": true,
+  "query": "Can I open a commercial shop in the basement?",
+  "answer": "Yes, but only under strict conditions. Under Rule 76(3)(e) (Gazette p. 90-91), commercial activity is permitted only on the first basement level and requires: (1) commercial land use, (2) minimum plot area of 1.0 hectare, and (3) detached building...",
+  "sources": [
+    {
+      "id": "rule-76",
+      "number": "76",
+      "badge": "Rule 76",
+      "title": "Basement",
+      "page": "p. 90-91",
+      "snippet": "Basement shall not be used for habitable purpose except..."
+    }
+  ]
+}
+```
+
+---
+
 ### 3.1. Full-Text Search
 `GET /api/search`
 

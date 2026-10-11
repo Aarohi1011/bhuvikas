@@ -11,11 +11,21 @@ function normalize(str) {
     .trim();
 }
 
+const QUERY_STOPWORDS = new Set([
+  'can', 'i', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'of', 'how', 'what',
+  'is', 'are', 'do', 'does', 'my', 'we', 'you', 'if', 'be', 'should', 'would',
+  'could', 'me', 'it', 'about', 'tell', 'get', 'give', 'any', 'some', 'much',
+  'many', 'the', 'and', 'with', 'from', 'or', 'so', 'then', 'there', 'has',
+  'have', 'had', 'been', 'will', 'shall', 'open', 'make', 'build'
+]);
+
 // Tokenize query into clean search terms
 function tokenize(str) {
   const norm = normalize(str);
   if (!norm) return [];
-  return norm.split(' ').filter(t => t.length > 0);
+  const words = norm.split(' ').filter(t => t.length > 0);
+  const filtered = words.filter(w => !QUERY_STOPWORDS.has(w));
+  return filtered.length > 0 ? filtered : words;
 }
 
 // Fuzzy distance (Levenshtein) for short tokens
@@ -149,38 +159,41 @@ export function searchRules(query = '', options = {}) {
     }
 
     // Token scoring
+    let matchedTokensCount = 0;
     for (const token of queryTokens) {
+      let tokenMatched = false;
       // Title match
       if (normTitle.includes(token)) {
-        score += 80;
+        score += 90;
+        tokenMatched = true;
         if (normTitle.startsWith(token)) score += 40;
       }
 
       // Keyword match
       if (rule.keywords && rule.keywords.some(k => k.toLowerCase().includes(token))) {
         score += 40;
+        tokenMatched = true;
       }
 
       // Content match
       const contentMatches = (normContent.match(new RegExp(token, 'g')) || []).length;
       if (contentMatches > 0) {
-        score += Math.min(30, contentMatches * 4);
+        score += Math.min(40, contentMatches * 5);
+        tokenMatched = true;
       }
 
       // Provisos / amendments match
       if (rule.provisos && rule.provisos.some(p => p.toLowerCase().includes(token))) {
-        score += 25;
+        score += 30;
+        tokenMatched = true;
       }
 
-      // Fuzzy check if token is > 4 chars and no match yet
-      if (score === 0 && token.length > 4) {
-        for (const kw of rule.keywords || []) {
-          if (levenshtein(token, kw.toLowerCase()) <= 1) {
-            score += 20;
-            break;
-          }
-        }
-      }
+      if (tokenMatched) matchedTokensCount++;
+    }
+
+    // Significant multi-token co-occurrence bonus
+    if (matchedTokensCount > 1) {
+      score *= (1 + matchedTokensCount * 0.7);
     }
 
     if (score > 0) {
