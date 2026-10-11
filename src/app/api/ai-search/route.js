@@ -53,15 +53,15 @@ export async function POST(request) {
       return txt;
     }).join('\n---\n');
 
-    const systemPrompt = `You are an expert legal advisor specializing in the Madhya Pradesh Bhumi Vikas Rules, 2012 (updated up to 6th March 2025).
-Your job is to answer citizen, architect, builder, and engineer questions accurately in clear, structured language.
-
-CRITICAL INSTRUCTIONS:
-1. Grounding: Answer strictly and factual based on the provided statutory context of Madhya Pradesh Bhumi Vikas Rules.
-2. Citation: Always cite the exact Rule number, Sub-rule, and Gazette page (e.g. 'Rule 76(3)(e), p. 90-91').
-3. Clarity: Start with a direct bottom-line answer (e.g., "Yes, but subject to...", "No, under Rule..."), followed by key conditions/specifications in bullet points.
-4. Language: If the user asks in Hindi/Hinglish, you may reply in clear Hindi/Hinglish with English rule names. Otherwise reply in professional English.
-5. If the provided rules do not contain enough information to answer definitively, say so clearly.`;
+    const systemPrompt = `You are a concise legal AI advisor for the Madhya Pradesh Bhumi Vikas Rules, 2012 (updated to March 2025).
+Your instructions:
+1. EXTREME BREVITY: Be concise, direct, and to the point. No conversational filler or long preambles.
+2. VERDICT FIRST: Begin immediately with a clear bold verdict line: e.g. **Direct Verdict:** [Allowed / Not Permitted / Permitted subject to conditions].
+3. TABLE FORMATTING: Whenever presenting numeric values, setbacks, FAR, road widths, plot categories, or dimensional rules, format them in a clean Markdown Table:
+| Parameter | Statutory Requirement | Rule Citation |
+|---|---|---|
+4. BULLET POINTS: List essential conditions or exceptions in 2-4 concise bullet points citing exact Rule numbers (e.g., Rule 76(2), Gazette p. 91).
+5. Language: Reply in crisp English (or clear Hinglish if asked in Hindi). Keep the entire answer under 180 words unless complex tabular data is required.`;
 
     const userPrompt = `STATUTORY CONTEXT FROM MADHYA PRADESH BHUMI VIKAS RULES, 2012:
 ${contextPrompt}
@@ -69,7 +69,7 @@ ${contextPrompt}
 USER QUESTION:
 "${query}"
 
-Please provide a clear, structured legal answer with exact rule numbers and page citations.`;
+Please provide a concise, to-the-point answer with a Direct Verdict, Markdown Table for specifications, and exact rule citations.`;
 
     let aiAnswer = "";
 
@@ -78,22 +78,27 @@ Please provide a clear, structured legal answer with exact rule numbers and page
       const anthropic = getAnthropicClient();
       const message = await anthropic.messages.create({
         model: 'claude-sonnet-5-5',
-        max_tokens: 2000,
+        max_tokens: 1000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }]
       });
       const textBlock = message.content.find(c => c.type === 'text');
       aiAnswer = textBlock?.text || 'No response generated.';
     } else {
-      // Smart Statutory Synthesis Fallback when API key is not configured locally
-      aiAnswer = `### Madhya Pradesh Bhumi Vikas Statutory Analysis\n\n` +
-        `**Legal Query:** "${query}"\n\n` +
-        `The following governing provisions from **MP Bhumi Vikas Rules, 2012** apply directly to your inquiry:\n\n` +
-        enrichedSources.map((s, idx) => 
-          `**${idx + 1}. [${s.badge}] ${s.title}** (${s.page ? `Gazette ${s.page}` : s.part}):\n` +
-          `${s.fullContent || s.snippet}\n`
-        ).join('\n') +
-        `\n> **Statutory Guidance:** Review the cited rules above with your local Municipal Corporation (Bhopal/Indore) or T&CP planning zone office for formal sanction.`;
+      // Smart Concise Statutory Synthesis Fallback when API key is not configured locally
+      const primary = enrichedSources[0];
+      aiAnswer = `### Statutory Summary: MP Bhumi Vikas Rules\n\n` +
+        `**Direct Verdict:** Subject to **${primary ? primary.badge : 'Statutory Provisions'}** (${primary?.title || 'Planning Compliance'}).\n\n` +
+        `| Statutory Rule | Subject Matter | Gazette Reference |\n` +
+        `|---|---|---|\n` +
+        enrichedSources.map(s => `| **${s.badge}** | ${s.title.length > 45 ? s.title.slice(0, 42) + '...' : s.title} | ${s.page ? `p. ${s.page}` : s.part} |`).join('\n') +
+        `\n\n` +
+        `**Key Statutory Specifications:**\n` +
+        enrichedSources.map(s => {
+          const cleanSnippet = (s.snippet || s.fullContent || '').replace(/[*_#`]/g, '').replace(/\s+/g, ' ').slice(0, 140).trim();
+          return `- **${s.badge}:** ${cleanSnippet}...`;
+        }).join('\n') +
+        `\n\n> **Compliance Note:** Check local T&CP zonal plan and MP Nagar Palika sanction requirements.`;
     }
 
     return NextResponse.json({

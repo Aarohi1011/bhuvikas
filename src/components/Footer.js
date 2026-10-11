@@ -128,13 +128,13 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/chat"
+                  href="/dashboard"
                   style={{ color: "#CBD5E1", display: "inline-flex", alignItems: "center", gap: "0.5rem", transition: "color 0.15s" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--warm-gold)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
                 >
                   <MessageSquare width={14} height={14} style={{ color: "var(--teal-primary)" }} />
-                  <span>AI Regulation Assistant (Chat)</span>
+                  <span>AI Regulation Assistant & Chat</span>
                 </Link>
               </li>
               <li>

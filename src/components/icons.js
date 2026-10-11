@@ -365,4 +365,13 @@ export function Lock({ className = "w-5 h-5", ...props }) {
   );
 }
 
+export function ChevronLeft({ className = "w-5 h-5", ...props }) {
+  return (
+    <svg {...defaultProps} className={className} viewBox="0 0 24 24" {...props}>
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  );
+}
+
+
 

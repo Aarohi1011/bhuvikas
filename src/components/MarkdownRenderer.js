@@ -9,9 +9,7 @@ import React from "react";
 function renderInlineText(text) {
   if (!text) return null;
 
-  // Split by inline code, bold, and italics tokens
   const tokens = [];
-  let remaining = text;
   let keyIndex = 0;
 
   // Regex to match **bold**, `code`, *italic*, and Rule citations
@@ -21,7 +19,6 @@ function renderInlineText(text) {
   let match;
 
   while ((match = regex.exec(text)) !== null) {
-    // Text before match
     if (match.index > lastIndex) {
       tokens.push(text.substring(lastIndex, match.index));
     }
@@ -101,6 +98,7 @@ export default function MarkdownRenderer({ content, className = "" }) {
   let codeBlockLines = [];
   let currentList = [];
   let listType = null; // 'ul' or 'ol'
+  let currentTable = [];
 
   const flushList = (key) => {
     if (currentList.length > 0) {
@@ -149,13 +147,107 @@ export default function MarkdownRenderer({ content, className = "" }) {
     }
   };
 
+  const flushTable = (key) => {
+    if (currentTable.length > 0) {
+      // Parse table rows
+      const parsedRows = currentTable.map((rowStr) => {
+        const trimmed = rowStr.replace(/^\|/, "").replace(/\|$/, "");
+        return trimmed.split("|").map((cell) => cell.trim());
+      });
+
+      let headerRow = null;
+      let bodyRows = [];
+
+      // Check if second row is divider (e.g. --- | ---)
+      if (
+        parsedRows.length >= 2 &&
+        parsedRows[1].every((cell) => /^:?-+:?$/.test(cell.trim()) || cell.trim() === "")
+      ) {
+        headerRow = parsedRows[0];
+        bodyRows = parsedRows.slice(2);
+      } else {
+        bodyRows = parsedRows;
+      }
+
+      elements.push(
+        <div
+          key={`tbl-wrap-${key}`}
+          style={{
+            overflowX: "auto",
+            margin: "1rem 0",
+            borderRadius: "0.75rem",
+            border: "1px solid var(--border-sand)",
+            boxShadow: "0 2px 8px rgba(11, 31, 42, 0.03)",
+            backgroundColor: "#FFFFFF",
+          }}
+        >
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "0.82rem",
+              textAlign: "left",
+            }}
+          >
+            {headerRow && (
+              <thead style={{ backgroundColor: "rgba(15, 118, 110, 0.06)", borderBottom: "2px solid var(--border-sand)" }}>
+                <tr>
+                  {headerRow.map((h, i) => (
+                    <th
+                      key={`th-${i}`}
+                      style={{
+                        padding: "0.65rem 0.9rem",
+                        fontWeight: 700,
+                        color: "var(--ink-navy)",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      {renderInlineText(h)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {bodyRows.map((row, rIdx) => (
+                <tr
+                  key={`tr-${rIdx}`}
+                  style={{
+                    backgroundColor: rIdx % 2 === 0 ? "#FFFFFF" : "rgba(247, 245, 240, 0.4)",
+                    borderBottom: rIdx === bodyRows.length - 1 ? "none" : "1px solid var(--border-sand)",
+                  }}
+                >
+                  {row.map((cell, cIdx) => (
+                    <td
+                      key={`td-${cIdx}`}
+                      style={{
+                        padding: "0.6rem 0.9rem",
+                        color: "var(--ink-navy)",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {renderInlineText(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+
+      currentTable = [];
+    }
+  };
+
   lines.forEach((rawLine, index) => {
     const line = rawLine.trim();
 
     // Check code blocks
     if (line.startsWith("```")) {
+      flushList(index);
+      flushTable(index);
       if (inCodeBlock) {
-        // Close code block
         elements.push(
           <pre
             key={`code-${index}`}
@@ -177,7 +269,6 @@ export default function MarkdownRenderer({ content, className = "" }) {
         codeBlockLines = [];
         inCodeBlock = false;
       } else {
-        flushList(index);
         inCodeBlock = true;
       }
       return;
@@ -186,6 +277,15 @@ export default function MarkdownRenderer({ content, className = "" }) {
     if (inCodeBlock) {
       codeBlockLines.push(rawLine);
       return;
+    }
+
+    // Markdown Table line (starts with | and has at least two |)
+    if (line.startsWith("|") && (line.match(/\|/g) || []).length >= 2) {
+      flushList(index);
+      currentTable.push(line);
+      return;
+    } else {
+      flushTable(index);
     }
 
     // Unordered List Items (- or * or •)
@@ -209,7 +309,7 @@ export default function MarkdownRenderer({ content, className = "" }) {
 
     // Empty lines
     if (!line) {
-      elements.push(<div key={`sp-${index}`} style={{ height: "0.5rem" }} />);
+      elements.push(<div key={`sp-${index}`} style={{ height: "0.4rem" }} />);
       return;
     }
 
@@ -219,10 +319,10 @@ export default function MarkdownRenderer({ content, className = "" }) {
         <h4
           key={`h4-${index}`}
           style={{
-            fontSize: "1rem",
+            fontSize: "0.95rem",
             fontWeight: 800,
             color: "var(--ink-navy)",
-            margin: "1rem 0 0.4rem",
+            margin: "0.85rem 0 0.35rem",
             letterSpacing: "-0.01em",
           }}
         >
@@ -237,13 +337,13 @@ export default function MarkdownRenderer({ content, className = "" }) {
         <h3
           key={`h3-${index}`}
           style={{
-            fontSize: "1.15rem",
+            fontSize: "1.1rem",
             fontWeight: 800,
             color: "var(--ink-navy)",
-            margin: "1.25rem 0 0.5rem",
+            margin: "1rem 0 0.45rem",
             letterSpacing: "-0.02em",
             borderBottom: "1px solid var(--border-sand)",
-            paddingBottom: "0.35rem",
+            paddingBottom: "0.3rem",
           }}
         >
           {renderInlineText(line.replace(/^##\s+/, ""))}
@@ -257,10 +357,10 @@ export default function MarkdownRenderer({ content, className = "" }) {
         <h2
           key={`h2-${index}`}
           style={{
-            fontSize: "1.35rem",
+            fontSize: "1.25rem",
             fontWeight: 800,
             color: "var(--ink-navy)",
-            margin: "1.5rem 0 0.6rem",
+            margin: "1.25rem 0 0.5rem",
             letterSpacing: "-0.02em",
           }}
         >
@@ -277,12 +377,12 @@ export default function MarkdownRenderer({ content, className = "" }) {
           key={`bq-${index}`}
           style={{
             borderLeft: "3px solid var(--teal-primary)",
-            paddingLeft: "1rem",
-            margin: "0.75rem 0",
+            paddingLeft: "0.9rem",
+            margin: "0.6rem 0",
             color: "var(--text-muted)",
-            fontStyle: "italic",
+            fontSize: "0.85rem",
             backgroundColor: "var(--sand-white)",
-            padding: "0.6rem 1rem",
+            padding: "0.5rem 0.85rem",
             borderRadius: "0 0.5rem 0.5rem 0",
           }}
         >
@@ -300,7 +400,7 @@ export default function MarkdownRenderer({ content, className = "" }) {
           style={{
             border: "none",
             borderTop: "1px solid var(--border-sand)",
-            margin: "1rem 0",
+            margin: "0.85rem 0",
           }}
         />
       );
@@ -312,10 +412,10 @@ export default function MarkdownRenderer({ content, className = "" }) {
       <p
         key={`p-${index}`}
         style={{
-          margin: "0.35rem 0",
-          lineHeight: 1.65,
+          margin: "0.3rem 0",
+          lineHeight: 1.6,
           color: "var(--ink-navy)",
-          fontSize: "0.88rem",
+          fontSize: "0.86rem",
         }}
       >
         {renderInlineText(line)}
@@ -323,8 +423,9 @@ export default function MarkdownRenderer({ content, className = "" }) {
     );
   });
 
-  // Flush any final list
+  // Flush any final list or table
   flushList(lines.length);
+  flushTable(lines.length);
 
   return <div className={`bv-markdown-content ${className}`}>{elements}</div>;
 }

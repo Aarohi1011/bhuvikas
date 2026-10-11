@@ -26,12 +26,10 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const navLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: Scale },
-    { href: "/chat", label: "AI Regulation Chat", icon: MessageSquare, badge: "Claude" },
+    { href: "/dashboard", label: "Dashboard & AI Chat", icon: MessageSquare, badge: "Claude AI" },
     { href: "/claude-ui-testing", label: "AI Search Lab", icon: Sparkles, badge: "New" },
-    { href: "/history", label: "History", icon: History },
-    { href: "/creative", label: "Creative Studio", icon: Palette },
     { href: "/rules", label: "Rule Limits", icon: Sliders },
+    { href: "/creative", label: "Creative Studio", icon: Palette },
     { href: "/support", label: "Support", icon: LifeBuoy },
   ];
 

@@ -73,7 +73,7 @@ export default function HomePage() {
   const handleLaunchQuery = (queryText) => {
     createNewSession(queryText.slice(0, 40) + "...");
     sendMessage(queryText);
-    router.push("/chat");
+    router.push("/dashboard");
   };
 
   return (
@@ -135,9 +135,17 @@ export default function HomePage() {
 
               {/* Action Buttons */}
               <div style={{ display: "flex", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
-                <Link href="/chat" className="bv-btn-primary" style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}>
+                <Link href="/dashboard" className="bv-btn-primary" style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}>
                   <MessageSquare width={18} height={18} />
-                  <span>Launch AI Assistant</span>
+                  <span>Launch AI Dashboard</span>
+                </Link>
+                <Link
+                  href="/auth"
+                  className="bv-btn-gold"
+                  style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}
+                >
+                  <Lock width={18} height={18} />
+                  <span>Log In & Sign Up</span>
                 </Link>
                 <Link
                   href="/rules"
@@ -145,7 +153,7 @@ export default function HomePage() {
                   style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}
                 >
                   <Sliders width={18} height={18} />
-                  <span>Instant Rule Sandbox</span>
+                  <span>Rule Sandbox</span>
                 </Link>
               </div>
 
