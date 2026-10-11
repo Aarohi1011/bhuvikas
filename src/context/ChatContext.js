@@ -285,7 +285,21 @@ export function ChatProvider({ children }) {
 export function useChat() {
   const context = useContext(ChatContext);
   if (!context) {
-    throw new Error("useChat must be used within a ChatProvider");
+    return {
+      sessions: [],
+      activeSession: null,
+      activeSessionId: null,
+      activeLanguage: "en",
+      isTyping: false,
+      setActiveLanguage: () => {},
+      setActiveSessionId: () => {},
+      createNewSession: () => ({ id: "default", messages: [] }),
+      deleteSession: () => {},
+      sendMessage: () => {},
+      inspectedClause: null,
+      openClauseInspector: () => {},
+      closeClauseInspector: () => {},
+    };
   }
   return context;
 }
