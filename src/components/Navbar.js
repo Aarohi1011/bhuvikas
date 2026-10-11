@@ -217,7 +217,25 @@ export default function Navbar() {
                     ))}
                   </div>
 
-                  <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.35rem" }}>
+                  <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "0.35rem", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                    <Link
+                      href="/settings"
+                      onClick={() => setProfileOpen(false)}
+                      style={{
+                        padding: "0.5rem",
+                        borderRadius: "0.5rem",
+                        fontSize: "0.78rem",
+                        fontWeight: 600,
+                        color: "var(--ink-navy)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <Settings width={15} height={15} style={{ color: "var(--teal-primary)" }} />
+                      <span>Platform Settings</span>
+                    </Link>
+
                     <button
                       onClick={handleSignOut}
                       style={{
@@ -232,9 +250,11 @@ export default function Navbar() {
                         alignItems: "center",
                         gap: "0.5rem",
                         cursor: "pointer",
+                        background: "none",
+                        border: "none",
                       }}
                     >
-                      <LogOut width={16} height={16} style={{ color: "var(--status-error)" }} />
+                      <LogOut width={15} height={15} style={{ color: "var(--status-error)" }} />
                       <span>Sign Out</span>
                     </button>
                   </div>

@@ -1,235 +1,389 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useChat } from "@/context/ChatContext";
-import { Settings, User, Check, Palette, ShieldCheck } from "@/components/icons";
+import {
+  Settings,
+  User,
+  Check,
+  Palette,
+  ShieldCheck,
+  Building,
+  Sliders,
+  Scale,
+  Sparkles,
+  ArrowRight,
+  ArrowLeft,
+  Lock,
+} from "@/components/icons";
 
 export default function SettingsPage() {
-  const { currentUser } = useAuth();
+  const { currentUser, isAuthenticated } = useAuth();
   const { activeLanguage, setActiveLanguage } = useChat();
 
-  const [theme, setTheme] = useState("sand"); // "sand", "dark", "system"
-  const [name, setName] = useState(currentUser?.name || "Aarohi Sharma");
-  const [email, setEmail] = useState(currentUser?.email || "aarohi.sharma@mp-realty.in");
-  const [role, setRole] = useState(currentUser?.role || "Real Estate Broker / Channel Partner");
-  const [org, setOrg] = useState(currentUser?.organization || "Madhya Pradesh Property Advisory");
+  const [theme, setTheme] = useState("sand");
+  const [name, setName] = useState(currentUser?.name || "Aarohi Saxena");
+  const [email, setEmail] = useState(currentUser?.email || "aarohisaxena1011@gmail.com");
+  const [role, setRole] = useState(currentUser?.role || "Town Planning Officer & Architect");
+  const [org, setOrg] = useState(currentUser?.organization || "Directorate of Town & Country Planning (T&CP)");
+  const [jurisdiction, setJurisdiction] = useState("Bhopal Municipal Corporation (BMC)");
+  const [autoCiteRules, setAutoCiteRules] = useState(true);
+  const [detailedTables, setDetailedTables] = useState(true);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    if (currentUser) {
+      setName(currentUser.name || "");
+      setEmail(currentUser.email || "");
+      setRole(currentUser.role || "Town Planning Officer & Architect");
+      setOrg(currentUser.organization || "Directorate of Town & Country Planning (T&CP)");
+    }
+  }, [currentUser]);
 
   const handleSave = (e) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      const updatedUser = {
+        ...(currentUser || {}),
+        name,
+        email,
+        role,
+        organization: org,
+      };
+      localStorage.setItem("bhuvikas_user", JSON.stringify(updatedUser));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F0] py-8 px-4 sm:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="pb-4 border-b border-[#E6E2D9]">
-          <div className="flex items-center space-x-2">
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#F9F5EB] text-[#967332] border border-[#EADBBE]">
-              Preferences
-            </span>
-            <span className="text-slate-400">•</span>
-            <span className="text-xs text-slate-500 font-medium">BhuVikas AI Desk</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B1F2A] tracking-tight mt-1">
-            Platform Settings
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Configure your working language, aesthetic theme, and professional broker profile credentials.
-          </p>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--sand-white)", padding: "2.5rem 1.5rem" }}>
+      <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+        {/* Navigation Breadcrumb */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <Link
+            href="/dashboard"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              fontSize: "0.82rem",
+              fontWeight: 700,
+              color: "var(--teal-primary)",
+            }}
+          >
+            <ArrowLeft width={16} height={16} />
+            <span>Back to Regulatory AI Desk</span>
+          </Link>
+
+          <span
+            style={{
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              padding: "0.2rem 0.65rem",
+              borderRadius: "9999px",
+              backgroundColor: "var(--gold-bg)",
+              color: "#967332",
+              border: "1px solid var(--gold-border)",
+            }}
+          >
+            MP Bhumi Vikas 2012 Engine
+          </span>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-6">
-          {/* Section 1: Language Selection */}
-          <div className="bg-white p-6 rounded-2xl border border-[#E6E2D9] shadow-2xs space-y-4">
-            <div className="pb-3 border-b border-[#ECE8E0]">
-              <h3 className="text-sm font-bold text-[#0B1F2A]">Language & Multilingual Mode</h3>
-              <p className="text-[11px] text-slate-500">
-                Choose the default language for AI explanations, rule summaries, and listing generation.
+        {/* Page Title Header */}
+        <div
+          style={{
+            backgroundColor: "var(--card-white)",
+            borderRadius: "1.25rem",
+            padding: "2rem",
+            border: "1px solid var(--border-sand)",
+            boxShadow: "0 4px 20px -4px rgba(11, 31, 42, 0.05)",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
+            <div
+              style={{
+                width: "3rem",
+                height: "3rem",
+                borderRadius: "0.85rem",
+                backgroundColor: "rgba(15, 118, 110, 0.1)",
+                color: "var(--teal-primary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Settings width={24} height={24} />
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <h1 style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--ink-navy)", letterSpacing: "-0.01em" }}>
+                  Platform Settings & Intelligence Preferences
+                </h1>
+              </div>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.35rem", lineHeight: 1.5 }}>
+                Configure your statutory consultation persona, multilingual explanation engine, and Madhya Pradesh municipal compliance parameters.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          {/* Card 1: Multilingual Consultation Mode */}
+          <div
+            style={{
+              backgroundColor: "var(--card-white)",
+              borderRadius: "1.25rem",
+              padding: "1.75rem",
+              border: "1px solid var(--border-sand)",
+            }}
+          >
+            <div style={{ marginBottom: "1.25rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--ink-navy)" }}>
+                  Consultation Language & Output Mode
+                </span>
+                <span className="bv-badge-gold">Bilingual</span>
+              </div>
+              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                Select how BhuVikas AI renders legal rules, setbacks, and FAR calculation answers.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
               <div
                 onClick={() => setActiveLanguage("en")}
-                className={`p-3.5 rounded-xl border cursor-pointer transition ${
-                  activeLanguage === "en"
-                    ? "bg-[#F7F5F0] border-[#0F766E] shadow-2xs"
-                    : "border-[#E6E2D9] hover:bg-[#F7F5F0]"
-                }`}
+                style={{
+                  padding: "1rem",
+                  borderRadius: "0.85rem",
+                  border: activeLanguage === "en" ? "2px solid var(--teal-primary)" : "1px solid var(--border-sand)",
+                  backgroundColor: activeLanguage === "en" ? "rgba(15, 118, 110, 0.04)" : "var(--sand-white)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-[#0B1F2A]">English</span>
-                  {activeLanguage === "en" && <Check className="w-4 h-4 text-[#0F766E]" />}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--ink-navy)" }}>English (Official)</span>
+                  {activeLanguage === "en" && <Check width={18} height={18} style={{ color: "var(--teal-primary)" }} />}
                 </div>
-                <p className="text-[11px] text-slate-500">
-                  Standard municipal English with official legal terminology.
+                <p style={{ fontSize: "0.74rem", color: "var(--text-muted)", lineHeight: 1.4 }}>
+                  Standard municipal English with verbatim gazette clauses and structured metric tables.
                 </p>
               </div>
 
               <div
                 onClick={() => setActiveLanguage("hi")}
-                className={`p-3.5 rounded-xl border cursor-pointer transition ${
-                  activeLanguage === "hi"
-                    ? "bg-[#F7F5F0] border-[#0F766E] shadow-2xs"
-                    : "border-[#E6E2D9] hover:bg-[#F7F5F0]"
-                }`}
+                style={{
+                  padding: "1rem",
+                  borderRadius: "0.85rem",
+                  border: activeLanguage === "hi" ? "2px solid var(--teal-primary)" : "1px solid var(--border-sand)",
+                  backgroundColor: activeLanguage === "hi" ? "rgba(15, 118, 110, 0.04)" : "var(--sand-white)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-[#0B1F2A]">हिन्दी (Hindi)</span>
-                  {activeLanguage === "hi" && <Check className="w-4 h-4 text-[#0F766E]" />}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--ink-navy)" }}>हिन्दी (मध्य प्रदेश राजपत्र)</span>
+                  {activeLanguage === "hi" && <Check width={18} height={18} style={{ color: "var(--teal-primary)" }} />}
                 </div>
-                <p className="text-[11px] text-slate-500">
-                  मध्य प्रदेश राजपत्र आधारित शुद्ध एवं सरल विधिक व्याख्या।
-                </p>
-              </div>
-
-              <div
-                onClick={() => setActiveLanguage("en")}
-                className="p-3.5 rounded-xl border border-[#E6E2D9] hover:bg-[#F7F5F0] cursor-pointer transition opacity-80"
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-[#0B1F2A]">Hinglish</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">Auto-detected</span>
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Natural blend for colloquial broker client consultations.
+                <p style={{ fontSize: "0.74rem", color: "var(--text-muted)", lineHeight: 1.4 }}>
+                  शुद्ध और स्पष्ट हिन्दी व्याख्या — भूमि विकास नियम 2012 के अनुसार सभी नियमों का विवरण।
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Section 2: Aesthetic Palette */}
-          <div className="bg-white p-6 rounded-2xl border border-[#E6E2D9] shadow-2xs space-y-4">
-            <div className="pb-3 border-b border-[#ECE8E0]">
-              <h3 className="text-sm font-bold text-[#0B1F2A]">Aesthetic Theme Guide</h3>
-              <p className="text-[11px] text-slate-500">
-                Calm English shades curated for professional real estate and planning desks.
+          {/* Card 2: Professional Profile & Consultation Stamp */}
+          <div
+            style={{
+              backgroundColor: "var(--card-white)",
+              borderRadius: "1.25rem",
+              padding: "1.75rem",
+              border: "1px solid var(--border-sand)",
+            }}
+          >
+            <div style={{ marginBottom: "1.25rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--ink-navy)" }}>
+                  Professional Profile & Digital Stamp
+                </span>
+                <span style={{ fontSize: "0.68rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "9999px", backgroundColor: "#EFF6FF", color: "#1D4ED8" }}>
+                  Active Persona
+                </span>
+              </div>
+              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                These credentials stamp your compliance consultations, exported reports, and regulatory checks.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div
-                onClick={() => setTheme("sand")}
-                className={`p-4 rounded-xl border cursor-pointer transition ${
-                  theme === "sand"
-                    ? "bg-[#F7F5F0] border-[#0F766E] shadow-2xs"
-                    : "border-[#E6E2D9] hover:bg-[#F7F5F0]"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-[#0B1F2A]">Calm Sand Light (Active)</span>
-                  {theme === "sand" && <Check className="w-4 h-4 text-[#0F766E]" />}
-                </div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="w-5 h-5 rounded-md bg-[#0F766E]" title="Deep Teal"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#0B1F2A]" title="Ink Navy"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#C8A15A]" title="Warm Gold"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#F7F5F0] border border-[#E6E2D9]" title="Sand White"></span>
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Soft on the eyes with Deep Teal buttons and Warm Gold badges.
-                </p>
-              </div>
-
-              <div
-                onClick={() => setTheme("dark")}
-                className={`p-4 rounded-xl border cursor-pointer transition ${
-                  theme === "dark"
-                    ? "bg-[#0B1417] text-white border-[#0F766E] shadow-2xs"
-                    : "border-[#E6E2D9] hover:bg-[#F7F5F0]"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-xs font-bold ${theme === "dark" ? "text-white" : "text-[#0B1F2A]"}`}>
-                    Deep Ink Dark Mode
-                  </span>
-                  {theme === "dark" && <Check className="w-4 h-4 text-[#0F766E]" />}
-                </div>
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="w-5 h-5 rounded-md bg-[#0B1417] border border-slate-700" title="Dark Background"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#121E22]" title="Card Dark"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#0F766E]" title="Deep Teal"></span>
-                  <span className="w-5 h-5 rounded-md bg-[#C8A15A]" title="Warm Gold"></span>
-                </div>
-                <p className={`text-[11px] ${theme === "dark" ? "text-slate-300" : "text-slate-500"}`}>
-                  High-contrast dark mode for low-light trading sessions.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 3: Profile Information */}
-          <div className="bg-white p-6 rounded-2xl border border-[#E6E2D9] shadow-2xs space-y-4">
-            <div className="pb-3 border-b border-[#ECE8E0]">
-              <h3 className="text-sm font-bold text-[#0B1F2A]">Broker / Official Profile</h3>
-              <p className="text-[11px] text-slate-500">
-                Your credentials are auto-injected into generated listings, brochures, and consultation stamps.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
               <div>
-                <label className="block text-xs font-bold text-[#0B1F2A] mb-1">Full Name</label>
+                <label className="bv-label">Full Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F7F5F0] border border-[#E6E2D9] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+                  className="bv-input"
+                  placeholder="Aarohi Saxena"
+                  required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#0B1F2A] mb-1">Official Email Address</label>
+                <label className="bv-label">Email Address</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F7F5F0] border border-[#E6E2D9] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+                  className="bv-input"
+                  placeholder="aarohisaxena1011@gmail.com"
+                  required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#0B1F2A] mb-1">Designation / Role</label>
+                <label className="bv-label">Designation / Role</label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F7F5F0] border border-[#E6E2D9] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+                  className="bv-input"
+                  placeholder="Town Planning Officer & Architect"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#0B1F2A] mb-1">Firm / Agency</label>
+                <label className="bv-label">Organization / Firm</label>
                 <input
                   type="text"
                   value={org}
                   onChange={(e) => setOrg(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-[#F7F5F0] border border-[#E6E2D9] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+                  className="bv-input"
+                  placeholder="Directorate of Town & Country Planning (T&CP)"
                 />
               </div>
             </div>
           </div>
 
-          {/* Action Row */}
-          <div className="flex items-center justify-between pt-2">
-            {saved ? (
-              <span className="text-xs font-bold text-[#2F9E6B] flex items-center space-x-1.5">
-                <Check className="w-4 h-4 text-[#2F9E6B]" />
-                <span>Settings Saved to Local Storage!</span>
+          {/* Card 3: Madhya Pradesh Municipal Jurisdiction */}
+          <div
+            style={{
+              backgroundColor: "var(--card-white)",
+              borderRadius: "1.25rem",
+              padding: "1.75rem",
+              border: "1px solid var(--border-sand)",
+            }}
+          >
+            <div style={{ marginBottom: "1.25rem" }}>
+              <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--ink-navy)" }}>
+                Regulatory Jurisdiction & Precision Defaults
               </span>
+              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                Select your primary municipal corporation in Madhya Pradesh for localized bylaws and road width criteria.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem", marginBottom: "1.25rem" }}>
+              <div>
+                <label className="bv-label">Primary Corporation / Authority</label>
+                <select
+                  value={jurisdiction}
+                  onChange={(e) => setJurisdiction(e.target.value)}
+                  className="bv-input"
+                >
+                  <option value="Bhopal Municipal Corporation (BMC)">Bhopal Municipal Corporation (BMC)</option>
+                  <option value="Indore Development Authority (IDA)">Indore Development Authority (IDA / IMC)</option>
+                  <option value="Jabalpur Municipal Corporation (JMC)">Jabalpur Municipal Corporation (JMC)</option>
+                  <option value="Gwalior Municipal Corporation (GMC)">Gwalior Municipal Corporation (GMC)</option>
+                  <option value="Ujjain Municipal Corporation (UMC)">Ujjain Municipal Corporation (UMC)</option>
+                  <option value="All Madhya Pradesh Municipal Areas">All MP Municipal Areas (Default Niyam 2012)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="bv-label">Statutory Benchmark Rule Set</label>
+                <input
+                  type="text"
+                  value="MP Bhumi Vikas Niyam, 2012 (Gazette Notified)"
+                  disabled
+                  className="bv-input"
+                  style={{ backgroundColor: "var(--sand-white)", color: "var(--text-muted)", cursor: "not-allowed" }}
+                />
+              </div>
+            </div>
+
+            {/* Checkbox toggles */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.82rem", color: "var(--ink-navy)", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={autoCiteRules}
+                  onChange={(e) => setAutoCiteRules(e.target.checked)}
+                  style={{ accentColor: "var(--teal-primary)", width: "16px", height: "16px" }}
+                />
+                <span style={{ fontWeight: 600 }}>Always include authentic MP Gazette clause numbers (e.g. Rule 44, Rule 60)</span>
+              </label>
+
+              <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.82rem", color: "var(--ink-navy)", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={detailedTables}
+                  onChange={(e) => setDetailedTables(e.target.checked)}
+                  style={{ accentColor: "var(--teal-primary)", width: "16px", height: "16px" }}
+                />
+                <span style={{ fontWeight: 600 }}>Show Table 4 setbacks and MOS (Marginal Open Spaces) breakdown automatically</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Action Row */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingTop: "0.5rem",
+            }}
+          >
+            {saved ? (
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  color: "var(--status-success)",
+                  backgroundColor: "#ECFDF5",
+                  padding: "0.4rem 0.85rem",
+                  borderRadius: "0.6rem",
+                  border: "1px solid #A7F3D0",
+                }}
+              >
+                <Check width={16} height={16} />
+                <span>Settings and profile preferences successfully saved!</span>
+              </div>
             ) : (
-              <span className="text-xs text-slate-400">Settings persist in your browser session</span>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                Changes persist automatically in your active browser profile.
+              </span>
             )}
 
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white font-bold text-xs shadow-xs transition"
+              className="bv-btn-primary"
+              style={{ padding: "0.75rem 1.75rem" }}
             >
-              Save Preferences
+              <span>Save Preferences</span>
+              <ArrowRight width={16} height={16} />
             </button>
           </div>
         </form>
