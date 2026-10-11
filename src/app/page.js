@@ -117,26 +117,39 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div>
-            {isAuthenticated ? (
-              <Link
-                href="/dashboard"
-                className="bv-btn-primary"
-                style={{ padding: "0.55rem 1.25rem", fontSize: "0.82rem" }}
-              >
-                <span>Enter Dashboard</span>
-                <ArrowRight width={14} height={14} />
-              </Link>
-            ) : (
-              <Link
-                href="/auth"
-                className="bv-btn-gold"
-                style={{ padding: "0.55rem 1.35rem", fontSize: "0.82rem", fontWeight: 700 }}
-              >
-                <Lock width={14} height={14} />
-                <span>Log In & Sign Up</span>
-              </Link>
-            )}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <Link
+              href="/auth?mode=login"
+              className="bv-btn-outline"
+              style={{
+                padding: "0.5rem 1.25rem",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                borderColor: "rgba(255, 255, 255, 0.25)",
+                color: "#FFFFFF",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
+              <User width={14} height={14} />
+              <span>Log In</span>
+            </Link>
+            <Link
+              href="/auth?mode=signup"
+              className="bv-btn-gold"
+              style={{
+                padding: "0.5rem 1.35rem",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
+              <Lock width={14} height={14} />
+              <span>Sign Up</span>
+            </Link>
           </div>
         </div>
       </header>
@@ -196,27 +209,37 @@ export default function HomePage() {
                 with zero hallucinations.
               </p>
 
-              {/* Action Buttons */}
+              {/* Action Buttons: Log In & Sign Up only */}
               <div style={{ display: "flex", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
-                <Link href="/dashboard" className="bv-btn-primary" style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}>
-                  <MessageSquare width={18} height={18} />
-                  <span>Launch AI Dashboard</span>
+                <Link
+                  href="/auth?mode=login"
+                  className="bv-btn-primary"
+                  style={{
+                    padding: "0.85rem 1.85rem",
+                    fontSize: "0.95rem",
+                    fontWeight: 700,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <User width={18} height={18} />
+                  <span>Log In</span>
                 </Link>
                 <Link
-                  href="/auth"
+                  href="/auth?mode=signup"
                   className="bv-btn-gold"
-                  style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}
+                  style={{
+                    padding: "0.85rem 1.85rem",
+                    fontSize: "0.95rem",
+                    fontWeight: 700,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
                 >
                   <Lock width={18} height={18} />
-                  <span>Log In & Sign Up</span>
-                </Link>
-                <Link
-                  href="/rules"
-                  className="bv-btn-outline"
-                  style={{ padding: "0.85rem 1.6rem", fontSize: "0.9rem" }}
-                >
-                  <Sliders width={18} height={18} />
-                  <span>Rule Sandbox</span>
+                  <span>Sign Up</span>
                 </Link>
               </div>
 
@@ -806,12 +829,37 @@ export default function HomePage() {
           </p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
-            <Link href="/auth?mode=signup" className="bv-btn-primary" style={{ padding: "0.85rem 1.75rem", fontSize: "0.9rem" }}>
-              <span>Create Free Account</span>
-              <ArrowRight width={16} height={16} />
+            <Link
+              href="/auth?mode=login"
+              className="bv-btn-outline"
+              style={{
+                padding: "0.85rem 1.85rem",
+                fontSize: "0.92rem",
+                fontWeight: 700,
+                borderColor: "rgba(255, 255, 255, 0.25)",
+                color: "#FFFFFF",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <User width={16} height={16} />
+              <span>Log In</span>
             </Link>
-            <Link href="/dashboard" className="bv-btn-outline" style={{ padding: "0.85rem 1.75rem", fontSize: "0.9rem" }}>
-              <span>View Executive Dashboard</span>
+            <Link
+              href="/auth?mode=signup"
+              className="bv-btn-gold"
+              style={{
+                padding: "0.85rem 1.85rem",
+                fontSize: "0.92rem",
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <Lock width={16} height={16} />
+              <span>Sign Up</span>
             </Link>
           </div>
         </div>
