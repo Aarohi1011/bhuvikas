@@ -152,8 +152,8 @@ export default function ClaudeUiTestingPage() {
               >
                 POST /api/ai-search
               </span>
-              <Link href="/chat" className="bv-btn-primary" style={{ padding: "0.55rem 1rem", fontSize: "0.78rem" }}>
-                <span>Open Production Chat</span>
+              <Link href="/rules" className="bv-btn-primary" style={{ padding: "0.55rem 1rem", fontSize: "0.78rem" }}>
+                <span>Rule Limits</span>
                 <ArrowRight width={14} height={14} />
               </Link>
             </div>
@@ -351,15 +351,23 @@ export default function ClaudeUiTestingPage() {
               </div>
             )}
 
-            {/* Claude AI Answer Box (With Proper Markdown Parsing) */}
+            {/* Claude AI Answer Box (With Proper Markdown Parsing & Simple Human Layout) */}
             {aiResponse && (
-              <div className="bv-card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border-sand)", paddingBottom: "0.85rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--status-success)" }} />
-                    <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--ink-navy)" }}>
-                      Claude AI Statutory Answer
-                    </h3>
+              <div className="bv-card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem", borderLeft: "4px solid var(--teal-primary)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border-sand)", paddingBottom: "0.85rem", flexWrap: "wrap", gap: "0.5rem" }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--status-success)" }} />
+                      <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--ink-navy)" }}>
+                        Plain-Language Statutory Verdict
+                      </h3>
+                      <span className="bv-badge-gold" style={{ fontSize: "0.68rem" }}>
+                        Easy to Understand
+                      </span>
+                    </div>
+                    <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: "0.2rem" }}>
+                      Simplified explanation grounded in Madhya Pradesh Bhumi Vikas Rules, 2012.
+                    </p>
                   </div>
                   <button
                     type="button"
@@ -368,7 +376,7 @@ export default function ClaudeUiTestingPage() {
                     style={{ padding: "0.35rem 0.75rem", fontSize: "0.75rem" }}
                   >
                     {copiedId === "ai-answer" ? <Check width={14} height={14} /> : <Copy width={14} height={14} />}
-                    <span>{copiedId === "ai-answer" ? "Copied" : "Copy Answer"}</span>
+                    <span>{copiedId === "ai-answer" ? "Copied" : "Copy Simple Answer"}</span>
                   </button>
                 </div>
 

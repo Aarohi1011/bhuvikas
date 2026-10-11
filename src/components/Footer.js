@@ -134,18 +134,7 @@ export default function Footer() {
                   onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
                 >
                   <MessageSquare width={14} height={14} style={{ color: "var(--teal-primary)" }} />
-                  <span>AI Regulation Assistant & Chat</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/creative"
-                  style={{ color: "#CBD5E1", display: "inline-flex", alignItems: "center", gap: "0.5rem", transition: "color 0.15s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--warm-gold)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
-                >
-                  <Palette width={14} height={14} style={{ color: "var(--warm-gold)" }} />
-                  <span>Creative Listing Studio</span>
+                  <span>AI Regulatory Chatbot</span>
                 </Link>
               </li>
               <li>
@@ -161,13 +150,24 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/history"
+                  href="/creative"
                   style={{ color: "#CBD5E1", display: "inline-flex", alignItems: "center", gap: "0.5rem", transition: "color 0.15s" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--warm-gold)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
                 >
-                  <History width={14} height={14} style={{ color: "#94A3B8" }} />
-                  <span>Case History & Full Search</span>
+                  <Palette width={14} height={14} style={{ color: "var(--warm-gold)" }} />
+                  <span>Creative Listing Studio</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/auth"
+                  style={{ color: "#CBD5E1", display: "inline-flex", alignItems: "center", gap: "0.5rem", transition: "color 0.15s" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--warm-gold)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#CBD5E1")}
+                >
+                  <Building width={14} height={14} style={{ color: "var(--gold-accent)" }} />
+                  <span>Broker & Architect Portal</span>
                 </Link>
               </li>
             </ul>
